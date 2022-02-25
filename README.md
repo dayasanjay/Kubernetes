@@ -66,13 +66,46 @@ Logically, each controller is a separate process, but to reduce complexity, they
 
 <b>Some types of these controllers are:</b>
 
-1. Node controller: Responsible for noticing and responding when nodes go down.<br>
-2. Job controller: Watches for Job objects that represent one-off tasks, then creates Pods to run those tasks to completion.<br>
-3. Endpoints controller: Populates the Endpoints object (that is, joins Services & Pods).<br>
-4. Service Account & Token controllers: Create default accounts and API access tokens for new namespaces.<br> 
+1. Node controller : Responsible for noticing and responding when nodes go down.<br>
+2. Job controller : Watches for Job objects that represent one-off tasks, then creates Pods to run those tasks to completion.<br>
+3. Endpoints controller : Populates the Endpoints object (that is, joins Services & Pods).<br>
+4. Service Account & Token controllers : Create default accounts and API access tokens for new namespaces.<br> 
 
+<b>cloud-controller-manager</b>
 
+A Kubernetes control plane component that embeds cloud-specific control logic. The cloud controller manager lets you link your cluster into your cloud provider's API, and separates out the components that interact with that cloud platform from components that only interact with your cluster.
+The cloud-controller-manager only runs controllers that are specific to your cloud provider. If you are running Kubernetes on your own premises, or in a learning environment inside your own PC, the cluster does not have a cloud controller manager.<br>
 
+As with the kube-controller-manager, the cloud-controller-manager combines several logically independent control loops into a single binary that you run as a single process. You can scale horizontally (run more than one copy) to improve performance or to help tolerate failures.<br>
+
+<b>The following controllers can have cloud provider dependencies : </b>
+
+1. Node controller : For checking the cloud provider to determine if a node has been deleted in the cloud after it stops responding
+2. Route controller : For setting up routes in the underlying cloud infrastructure
+3. Service controller : For creating, updating and deleting cloud provider load balancers
+
+### Node Components
+
+Node components run on every node, maintaining running pods and providing the Kubernetes runtime environment.<br>
+
+<b>kubelet</b>
+An agent that runs on each node in the cluster. It makes sure that containers are running in a Pod.<br>
+
+The kubelet takes a set of PodSpecs that are provided through various mechanisms and ensures that the containers described in those PodSpecs are running and healthy. The kubelet doesn't manage containers which were not created by Kubernetes.<br>
+
+<b>kube-proxy</b>
+
+kube-proxy is a network proxy that runs on each node in your cluster, implementing part of the Kubernetes Service concept.<br>
+
+kube-proxy maintains network rules on nodes. These network rules allow network communication to your Pods from network sessions inside or outside of your cluster.<br>
+
+kube-proxy uses the operating system packet filtering layer if there is one and it's available. Otherwise, kube-proxy forwards the traffic itself.<br>
+
+<b>Container runtime</b>
+
+The container runtime is the software that is responsible for running containers.<br>
+
+Kubernetes supports container runtimes such as containerd, CRI-O, and any other implementation of the Kubernetes CRI (Container Runtime Interface).<br>
 
 
 
